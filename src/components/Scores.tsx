@@ -13,7 +13,7 @@ export default function Scores(props: Props) {
     return Array.from(players).sort((a, b) => b[1] - a[1]);
   }, [players])
   return sortedPlayers.map(([player, score]) => (
-    <Flex justify={'space-between'} align={'center'}>
+    <Flex justify={'space-between'} align={'center'} key={player}>
       <Flex style={{ flex: 1 }} mr={20} justify={'space-between'}>
         <Text>{player}</Text>
         <Text>{score}</Text>

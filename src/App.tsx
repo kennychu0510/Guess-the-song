@@ -10,6 +10,7 @@ import Settings from './components/Settings';
 import SongList from './components/SongList';
 import usePlaylistManager from './hooks/usePlaylistManager';
 import useSpotifyManager from './hooks/useSpotifyManager';
+import SuggestedPlaylists from './components/SuggestedPlaylists';
 
 function App() {
   const playlistIdInputRef = useRef<HTMLInputElement>(null);
@@ -83,7 +84,7 @@ function App() {
             <Scores players={players} addScore={addScore} />
             <Stack>
               <Title size={'h2'}>Songs</Title>
-              <TextInput size='xl' ref={playlistIdInputRef} placeholder='Spotify ID' error={playlistInputError} onChange={() => setPlaylistInputError('')}></TextInput>
+              <TextInput size='xl' ref={playlistIdInputRef} placeholder='Spotify Playlist ID' error={playlistInputError} onChange={() => setPlaylistInputError('')}></TextInput>
               <Flex justify={'space-between'}>
                 <Button onClick={onAddPlaylist} loading={playlistResult.isLoading} rightSection={<IconPlaylistAdd />}>
                   Add Playlist
@@ -103,11 +104,13 @@ function App() {
                 </Accordion.Item>
               ))}
             </Accordion>
+            <SuggestedPlaylists sdk={sdk} addPlaylist={addPlaylist} currentPlaylist={playlist}/>
+
             <Settings logout={logout} resetGame={resetGame} resetScores={resetScores} />
           </Stack>
         ) : (
           <Stack justify='center' style={{ height: '70dvh' }}>
-            <Button onClick={getToken} rightSection={<IconBrandSpotify />}>
+            <Button onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
               Connect Spotify
             </Button>
           </Stack>

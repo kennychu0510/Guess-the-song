@@ -21,6 +21,9 @@ export default function Settings(props: Props) {
     queryClient.removeQueries({
       queryKey: ['accessToken'],
     });
+    queryClient.removeQueries({
+      queryKey: ['personalPlaylist'],
+    });
     props.logout();
   }
 
@@ -42,7 +45,7 @@ export default function Settings(props: Props) {
       </Button>
       <Modal opened={opened} onClose={close} title='Settings' centered>
         <Stack>
-          <Button onClick={onResetScores} color='purple'>
+          <Button onClick={onResetScores} color='green'>
             Reset Scores
           </Button>
           <Button onClick={onResetGame} color='red'>
