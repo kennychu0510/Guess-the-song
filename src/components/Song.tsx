@@ -1,6 +1,6 @@
-import { Box, Flex, Image, Stack, Text } from '@mantine/core';
-import { PlaylistedTrack, SimplifiedTrack, Track } from '@spotify/web-api-ts-sdk';
-import React, { useContext } from 'react';
+import { Box, Flex, Image, Text } from '@mantine/core';
+import { Track } from '@spotify/web-api-ts-sdk';
+import { useContext } from 'react';
 import { GameContext } from '../context';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function Song(props: Props) {
-  const { setCurrentSong, player, currentSong } = useContext(GameContext);
+  const { setCurrentSong, currentSong } = useContext(GameContext);
 
   const isCurrentSong = currentSong?.song.id === props.song.id;
 

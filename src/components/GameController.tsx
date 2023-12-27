@@ -6,7 +6,7 @@ import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
 
 export default function GameController({ playlist }: { playlist: Map<string, Playlist> }) {
-  const { setCurrentSong, currentSong } = useContext(GameContext);
+  const { setCurrentSong } = useContext(GameContext);
 
   function playRandomSong() {
     const allSongs = Array.from(playlist.values());

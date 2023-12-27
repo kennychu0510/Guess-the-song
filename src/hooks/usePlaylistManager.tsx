@@ -1,10 +1,10 @@
-import { Playlist, Track } from '@spotify/web-api-ts-sdk';
-import React, { useEffect, useState } from 'react'
-import { songIsTrack } from '../helper';
+import { Playlist, SpotifyApi, Track } from '@spotify/web-api-ts-sdk';
 import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
+import { songIsTrack } from '../helper';
 import { getPlaylistById } from '../services/getPlaylist';
 
-export default function usePlaylistManager() {
+export default function usePlaylistManager(sdk: SpotifyApi | null) {
   const [playlistInput, setPlaylistInput] = useState('');
 
   const [playlist, setPlaylist] = useState<Map<string, Playlist>>(new Map());
@@ -12,26 +12,32 @@ export default function usePlaylistManager() {
 
   const playlistResult = useQuery({
     queryKey: ['playlistItems', playlistInput],
-    queryFn: () => getPlaylistById({ id: playlistInput }),
+    queryFn: () => getPlaylistById({ id: playlistInput, sdk: sdk! }),
     enabled: playlistInput !== '',
     gcTime: 1000 * 60 * 60,
     staleTime: 1000 * 60 * 60,
   });
 
-
   function addPlaylist(playlistId: string | undefined) {
     if (!playlistId) {
       setPlaylistInputError('Please enter a playlist ID');
+      return;
+    } else if (playlist.get(playlistId)) {
+      setPlaylistInputError('Playlist already added');
       return;
     }
     setPlaylistInput(playlistId);
     updateGamePlaylist();
   }
 
-  function updateGamePlaylist() {
+  const updateGamePlaylist = useCallback(() => {
     setPlaylist((list) => {
-      if (!playlistResult.data) return list;
-      if (playlist.get(playlistResult.data.id)) return list;
+      if (!playlistResult.data) {
+        return list;
+      }
+      if (playlist.get(playlistResult.data.id)) {
+        return list;
+      }
       const newList = new Map(list);
       const newPlaylist = playlistResult.data!;
       newPlaylist.tracks.items = newPlaylist.tracks.items
@@ -43,7 +49,7 @@ export default function usePlaylistManager() {
       newList.set(playlistResult.data!.id, playlistResult.data!);
       return newList;
     });
-  }
+  }, [setPlaylist, playlist, playlistResult.data]);
 
   function removePlaylist(id: string) {
     setPlaylist((list) => {
@@ -53,12 +59,9 @@ export default function usePlaylistManager() {
     });
   }
 
-
   useEffect(() => {
     updateGamePlaylist();
-  }, [playlistResult.data]);
-
-
+  }, [playlistResult.data, updateGamePlaylist]);
 
   return {
     addPlaylist,
@@ -66,6 +69,7 @@ export default function usePlaylistManager() {
     playlistInputError,
     playlistResult,
     setPlaylistInputError,
-    playlist
-  }
+    playlist,
+    setPlaylist,
+  };
 }
