@@ -52,10 +52,6 @@ function App() {
   }
 
   function resetScores() {
-    setPlayers(new Map());
-  }
-
-  function resetGame() {
     setPlayers((players) => {
       const newPlayers = new Map(players);
       newPlayers.forEach((_, key) => {
@@ -63,6 +59,10 @@ function App() {
       });
       return newPlayers;
     });
+  }
+
+  function resetGame() {
+    setPlayers(new Map());
   }
 
   return (

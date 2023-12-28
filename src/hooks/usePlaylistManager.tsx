@@ -1,7 +1,6 @@
-import { Playlist, SpotifyApi, Track } from '@spotify/web-api-ts-sdk';
+import { Playlist, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
-import { songIsTrack } from '../helper';
+import { useEffect, useState } from 'react';
 import { getPlaylistById } from '../services/getPlaylist';
 
 export default function usePlaylistManager(sdk: SpotifyApi | null) {
@@ -27,29 +26,8 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
       return;
     }
     setPlaylistInput(playlistId);
-    updateGamePlaylist();
   }
 
-  const updateGamePlaylist = useCallback(() => {
-    setPlaylist((list) => {
-      if (!playlistResult.data) {
-        return list;
-      }
-      if (playlist.get(playlistResult.data.id)) {
-        return list;
-      }
-      const newList = new Map(list);
-      const newPlaylist = playlistResult.data!;
-      newPlaylist.tracks.items = newPlaylist.tracks.items
-        .filter((item) => songIsTrack(item.track))
-        .filter((item) => {
-          const track = item.track as Track;
-          return track.preview_url !== null;
-        });
-      newList.set(playlistResult.data!.id, playlistResult.data!);
-      return newList;
-    });
-  }, [setPlaylist, playlist, playlistResult.data]);
 
   function removePlaylist(id: string) {
     setPlaylist((list) => {
@@ -60,8 +38,12 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
   }
 
   useEffect(() => {
-    updateGamePlaylist();
-  }, [playlistResult.data, updateGamePlaylist]);
+    setPlaylist(list => {
+      const newList = new Map(list);
+      newList.set(playlistResult.data!.id, playlistResult.data!);
+      return newList;
+    })
+  }, [playlistResult.data]);
 
   return {
     addPlaylist,

@@ -24,7 +24,9 @@ export default function Settings(props: Props) {
     queryClient.removeQueries({
       queryKey: ['personalPlaylist'],
     });
+    localStorage.removeItem('spotify-sdk:AuthorizationCodeWithPKCEStrategy:token'); // Remove local storage key
     props.logout();
+    
   }
 
   function onResetGame() {
