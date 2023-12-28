@@ -41,7 +41,7 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
         </Accordion.Control>
         <Accordion.Panel>
           <Stack>
-            <Select value={country} onChange={setCountry} label={'Country'} placeholder='Select a Country' searchable data={SPOTIFY_COUNTRIES} />
+            <Select size='md' value={country} onChange={setCountry} label={'Country'} placeholder='Select a Country' searchable data={SPOTIFY_COUNTRIES} />
             <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={playlist} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
           </Stack>
         </Accordion.Panel>
