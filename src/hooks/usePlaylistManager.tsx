@@ -1,5 +1,5 @@
 import { Playlist, SpotifyApi } from '@spotify/web-api-ts-sdk';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getPlaylistById } from '../services/getPlaylist';
 
@@ -8,6 +8,7 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
 
   const [playlist, setPlaylist] = useState<Map<string, Playlist>>(new Map());
   const [playlistInputError, setPlaylistInputError] = useState<string>('');
+  const queryClient = useQueryClient()
 
   const playlistResult = useQuery({
     queryKey: ['playlistItems', playlistInput],
@@ -25,7 +26,18 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
       setPlaylistInputError('Playlist already added');
       return;
     }
-    setPlaylistInput(playlistId);
+    const cachedResult = queryClient.getQueryData(['playlistItems', playlistId]);
+    if (cachedResult) {
+      const playlist = cachedResult as Playlist;
+      setPlaylist(list => {
+        const newList = new Map(list);
+        newList.set(playlist.id, playlist as Playlist);
+        return newList;
+      })
+    } else {
+      setPlaylistInput(playlistId);
+
+    }
   }
 
 
