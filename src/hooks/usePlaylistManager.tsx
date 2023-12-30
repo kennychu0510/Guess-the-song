@@ -38,6 +38,7 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
   }
 
   useEffect(() => {
+    if (!playlistResult.data) return;
     setPlaylist(list => {
       const newList = new Map(list);
       newList.set(playlistResult.data!.id, playlistResult.data!);
