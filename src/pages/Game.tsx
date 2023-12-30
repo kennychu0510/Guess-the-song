@@ -97,7 +97,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
       <SuggestedPlaylists sdk={sdk} addPlaylist={addPlaylist} currentPlaylist={playlist} />
       <Settings logout={logout} resetGame={resetGame} resetScores={resetScores} />
       <Box bottom={0} pos={'fixed'} left={0} right={0}>
-        <Stack align='center' justify='center' maw={500} h={150} w={'100%'} bg={'#333'} p={20}>
+        <Stack align='center' justify='center' h={150} w={'100%'} bg={'#333'} p={20} mx={'auto'}>
           {currentSong !== null && (
             <Text size={'xl'} c='white'>
               {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(',')}
