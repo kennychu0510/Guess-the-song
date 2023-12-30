@@ -11,9 +11,9 @@ type CurrentSong = {
 export const GameContext = createContext<{
   currentSong: CurrentSong | null;
   setCurrentSong: React.Dispatch<React.SetStateAction<CurrentSong | null>>;
-  player: React.RefObject<AudioPlayer>;
+  audioPlayerRef: React.RefObject<AudioPlayer>;
 }>({
   currentSong: null,
   setCurrentSong: () => {},
-  player: React.createRef<AudioPlayer>(),
+  audioPlayerRef: React.createRef<AudioPlayer>(),
 });
