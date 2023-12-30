@@ -1,16 +1,16 @@
-import { Accordion, Box, Button, Flex, Stack, TextInput, Title, Text } from '@mantine/core';
+import { Accordion, Box, Button, Stack, Text, TextInput, Title } from '@mantine/core';
 import { SpotifyApi } from '@spotify/web-api-ts-sdk';
-import { IconPlayCard, IconPlayerPlay, IconPlaylistAdd } from '@tabler/icons-react';
+import { IconPlaylistAdd } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
+import AudioPlayer from 'react-h5-audio-player';
 import CustomAccordionControl from '../components/AccordionControl';
 import GameController from '../components/GameController';
 import Scores from '../components/Scores';
 import Settings from '../components/Settings';
 import SongList from '../components/SongList';
 import SuggestedPlaylists from '../components/SuggestedPlaylists';
-import usePlaylistManager from '../hooks/usePlaylistManager';
-import AudioPlayer from 'react-h5-audio-player';
 import useGameContext from '../hooks/useGameContext';
+import usePlaylistManager from '../hooks/usePlaylistManager';
 
 export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => void }) {
   const playlistIdInputRef = useRef<HTMLInputElement>(null);
