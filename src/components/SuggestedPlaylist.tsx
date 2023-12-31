@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Image, Loader, Text, Title } from '@mantine/core';
+import { Button, Center, Flex, Image, Loader, Text } from '@mantine/core';
 import { Playlist, SimplifiedPlaylist } from '@spotify/web-api-ts-sdk';
 import { IconCheck, IconPlus } from '@tabler/icons-react';
 
