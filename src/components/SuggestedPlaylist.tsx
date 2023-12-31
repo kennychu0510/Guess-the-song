@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Image, Loader, Title } from '@mantine/core';
+import { Button, Center, Flex, Image, Loader, Text, Title } from '@mantine/core';
 import { Playlist, SimplifiedPlaylist } from '@spotify/web-api-ts-sdk';
 import { IconCheck, IconPlus } from '@tabler/icons-react';
 
@@ -26,7 +26,7 @@ export default function SuggestedPlaylist({
         <Flex key={item.id} justify={'space-between'} align={'center'}>
           <Flex align={'center'} gap={20} mr={20}>
             <Image src={item.images[0].url} w={80} h={80} />
-            <Title size={'h3'}>{item.name}</Title>
+            <Text size={'md'}>{item.name}</Text>
           </Flex>
           {currentPlaylist.get(item.id) ? (
             <Button color='green' style={{flexShrink: 0}}>

@@ -36,7 +36,6 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
       })
     } else {
       setPlaylistInput(playlistId);
-
     }
   }
 
@@ -49,6 +48,7 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     });
   }
 
+
   useEffect(() => {
     if (!playlistResult.data) return;
     setPlaylist(list => {
@@ -56,6 +56,7 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
       newList.set(playlistResult.data!.id, playlistResult.data!);
       return newList;
     })
+    setPlaylistInput('');
   }, [playlistResult.data]);
 
   return {
