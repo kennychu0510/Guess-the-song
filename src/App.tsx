@@ -19,7 +19,7 @@ function App() {
           <Game sdk={sdk} logout={logout}/>
         ) : (
           <Stack justify='center' style={{ height: '70dvh' }}>
-            <Button onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
+            <Button size='md' onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
               Connect Spotify
             </Button>
           </Stack>

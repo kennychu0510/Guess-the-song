@@ -2,7 +2,6 @@ import { Accordion, Box, Button, Stack, Text, TextInput, Title } from '@mantine/
 import { SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { IconPlaylistAdd } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
-import AudioPlayer from 'react-h5-audio-player';
 import CustomAccordionControl from '../components/AccordionControl';
 import GameController from '../components/GameController';
 import Scores from '../components/Scores';
@@ -18,7 +17,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
 
   const { addPlaylist, removePlaylist, playlistInputError, playlistResult, setPlaylistInputError, playlist } = usePlaylistManager(sdk);
   const [players, setPlayers] = useState<Map<string, number>>(new Map());
-  const { currentSong, audioPlayerRef } = useGameContext();
+  const { currentSong } = useGameContext();
 
   function onAddPlaylist() {
     if (!playlistIdInputRef.current || !playlistIdInputRef.current.value) {
@@ -106,22 +105,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
           <GameController playlist={playlist} />
         </Stack>
 
-        <AudioPlayer
-          src={currentSong?.song.preview_url ?? ''}
-          ref={audioPlayerRef}
-          showDownloadProgress={true}
-          autoPlay
-          // onPlaying={(e) => {
-          //   const randomSeekTime = Math.random() * 21;
-          //   audioPlayerRef.current?.audio.current?.fastSeek(randomSeekTime * 1000);
-          // }}
-          header={
-            <Text size={'xl'} c='black'>
-              {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(',')}
-            </Text>
-          }
-          style={{ opacity: 0, position: 'absolute' }}
-        />
+        
       </Box>
     </Stack>
   );
