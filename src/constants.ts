@@ -254,3 +254,13 @@ export const SPOTIFY_COUNTRIES = [
   'ZM',
   'ZW',
 ];
+
+export const DEFAULT_PLAY_DURATION = 10
+export const MAX_PLAY_DURATION = 30;
+export const PlayIntervalValues = [
+  { value: 2, label: 2 },
+  { value: 5, label: 5 },
+  { value: 10, label: 10 },
+  { value: 15, label: 15 },
+  { value: 20, label: 20 },
+];

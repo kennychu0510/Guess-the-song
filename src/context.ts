@@ -12,8 +12,12 @@ export const GameContext = createContext<{
   currentSong: CurrentSong | null;
   setCurrentSong: React.Dispatch<React.SetStateAction<CurrentSong | null>>;
   audioPlayerRef: React.RefObject<AudioPlayer>;
+  playDuration: number,
+  setPlayDuration: React.Dispatch<React.SetStateAction<number>>
 }>({
   currentSong: null,
   setCurrentSong: () => {},
   audioPlayerRef: React.createRef<AudioPlayer>(),
+  playDuration: 0,
+  setPlayDuration: () => {}
 });

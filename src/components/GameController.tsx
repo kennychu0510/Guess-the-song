@@ -5,6 +5,9 @@ import { useContext, useEffect, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
+import SongTimer from '../hooks/useSongTimer';
+import useSongTimer from '../hooks/useSongTimer';
+import { MAX_PLAY_DURATION } from '../constants';
 
 type TrackSequence = {
   playlistId: string;
@@ -12,10 +15,11 @@ type TrackSequence = {
 };
 
 export default function GameController({ playlist }: { playlist: Map<string, Playlist> }) {
-  const { setCurrentSong, audioPlayerRef, currentSong } = useContext(GameContext);
+  const { setCurrentSong, audioPlayerRef, currentSong, playDuration, setPlayDuration } = useContext(GameContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [startTime, setStartTime]= useState(Date.now())
 
   function pauseSong() {
     audioPlayerRef.current?.audio.current?.pause();
@@ -37,6 +41,8 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
         if (index >= randomSequence.length) return 0;
         return index + 1;
       });
+      const randomStart = getRandomStartTime(MAX_PLAY_DURATION, playDuration);
+      audioPlayerRef.current?.setJumpTime(randomStart);
     }
   }
 
@@ -53,6 +59,20 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
     setRandomSequence(randomSequence);
     setCurrentIndex(0);
   }, [playlist]);
+
+  function onPlay() {
+    const randomStart = getRandomStartTime(MAX_PLAY_DURATION, playDuration);
+    audioPlayerRef.current?.setJumpTime(randomStart);
+    setIsPlaying(true);
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + playDuration);
+    setStartTime(Date.now())
+  }
+
+  function onPause() {
+    setIsPlaying(false);
+
+  }
 
   return (
     <Flex gap={20}>
@@ -78,20 +98,35 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
             src={currentSong?.song.preview_url ?? ''}
             ref={audioPlayerRef}
             showDownloadProgress={true}
-            autoPlay
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
+            onPlay={onPlay}
+            onPause={onPause}
             onEnded={() => setIsPlaying(false)}
             onPlayError={() => setIsPlaying(false)}
+            onLoadStart={() => {
+              pauseSong();
+              setTimeout(() => {
+                playSong();
+              }, 500);
+            }}
+            onListen={() => {
+              const currentTime = Date.now()
+              if (currentTime - startTime > playDuration * 1000) {
+                pauseSong();
+              }
+            }}
             header={
               <Text size={'xl'} c='black'>
                 {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
               </Text>
             }
-            style={{ opacity: 0, position: 'absolute', zIndex: -1 }}
+            style={{ opacity: 0, position: 'absolute', zIndex: -1, left: 0 }}
           />
         </>
       )}
     </Flex>
   );
+}
+
+function getRandomStartTime(maxDuration: number, playDuration: number) {
+  return Math.floor(Math.random() * (maxDuration - playDuration)) * 1000;
 }

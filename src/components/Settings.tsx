@@ -1,9 +1,11 @@
-import { Button, Modal, Stack } from '@mantine/core';
+import { Box, Button, InputLabel, Modal, Slider, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { GameContext } from '../context';
+import useGameContext from '../hooks/useGameContext';
+import { PlayIntervalValues } from '../constants';
 
 type Props = {
   logout: () => void;
@@ -11,9 +13,13 @@ type Props = {
   resetScores: () => void;
 };
 
+type SettingPage = 'game' | 'scores' | 'settings';
+
 export default function Settings(props: Props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { setCurrentSong } = useContext(GameContext);
+  const [page, setPage] = useState<SettingPage | null>(null);
+  const { playDuration, setPlayDuration, setCurrentSong } = useGameContext();
+
 
   const queryClient = useQueryClient();
 
@@ -26,7 +32,6 @@ export default function Settings(props: Props) {
     });
     localStorage.removeItem('spotify-sdk:AuthorizationCodeWithPKCEStrategy:token'); // Remove local storage key
     props.logout();
-    
   }
 
   function onResetGame() {
@@ -45,8 +50,12 @@ export default function Settings(props: Props) {
       <Button style={{ width: '100%', marginBottom: 150 }} rightSection={<IconSettings />} onClick={open}>
         Settings
       </Button>
-      <Modal opened={opened} onClose={close} title='Settings' centered>
+      <Modal fullScreen opened={opened} onClose={close} title='Settings' centered>
         <Stack>
+          <Box mb={20}>
+            <InputLabel>Song Play Duration (sec)</InputLabel>
+            <Slider value={playDuration} onChange={setPlayDuration} min={2} max={20} marks={PlayIntervalValues} />
+          </Box>
           <Button onClick={onResetScores} color='green'>
             Reset Scores
           </Button>
