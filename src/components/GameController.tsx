@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Stack, Text } from '@mantine/core';
 import { Playlist } from '@spotify/web-api-ts-sdk';
-import { IconArrowsRandom, IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerPlay, IconPlayerTrackNext, IconRefresh } from '@tabler/icons-react';
+import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerPlay, IconPlayerTrackNext, IconRefresh } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { BOTTOM_TAB_HEIGHT, MAX_PLAY_DURATION } from '../constants';

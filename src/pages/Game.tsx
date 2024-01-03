@@ -1,4 +1,4 @@
-import { Accordion, AccordionControl, Box, Button, Flex, Stack, Text, Title } from '@mantine/core';
+import { Accordion, AccordionControl, Button, Flex, Stack, Title } from '@mantine/core';
 import { SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { IconEdit, IconMusic, IconUserPlus } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -6,7 +6,6 @@ import GameController from '../components/GameController';
 import Scores from '../components/Scores';
 import Settings from '../components/Settings';
 import SongList from '../components/SongList';
-import useGameContext from '../hooks/useGameContext';
 import usePlaylistContext from '../hooks/usePlaylistContext';
 import PlayerManagement from './PlayerManagement';
 import PlaylistManagement from './PlaylistManagement';
@@ -18,8 +17,6 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
   const [modalOpened, setModalOpened] = useState<null | ModalTab>(null);
 
   const playlistManager = usePlaylistContext();
-  const { currentSong } = useGameContext();
-
   if (!playlistManager) return null;
 
   const { playlist } = playlistManager;
