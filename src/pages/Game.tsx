@@ -9,6 +9,7 @@ import SongList from '../components/SongList';
 import usePlaylistContext from '../hooks/usePlaylistContext';
 import PlayerManagement from './PlayerManagement';
 import PlaylistManagement from './PlaylistManagement';
+import classes from '../Page.module.css'
 
 type ModalTab = 'players' | 'playlist' | null;
 
@@ -54,7 +55,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
   }
 
   return (
-    <Stack style={{ textAlign: 'start' }} mih={'80dvh'}>
+    <Stack style={{ textAlign: 'start' }} className={classes.Page}>
       <PlayerManagement players={players} setPlayers={setPlayers} onClose={closeModal} isOpened={modalOpened === 'players'} />
       <PlaylistManagement isOpened={modalOpened === 'playlist'} onClose={closeModal} sdk={sdk} />
       {players.size > 0 ? (

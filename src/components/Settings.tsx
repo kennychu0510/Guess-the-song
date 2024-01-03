@@ -4,6 +4,7 @@ import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { BOTTOM_TAB_HEIGHT, PlayIntervalValues } from '../constants';
 import useGameContext from '../hooks/useGameContext';
+import classes from '../Page.module.css'
 
 type Props = {
   logout: () => void;
@@ -54,7 +55,7 @@ export default function Settings(props: Props) {
             <Modal.CloseButton />
           </Modal.Header>
           <Modal.Body>
-            <Stack h={'80dvh'}>
+            <Stack className={classes.Page}>
               <Stack mb={20} style={{ flex: 1 }} gap={30}>
                 <Box>
                   <Text size='md' fw={'bold'} mb={10}>

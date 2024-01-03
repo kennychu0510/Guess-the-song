@@ -7,6 +7,7 @@ import { BOTTOM_TAB_HEIGHT, MAX_PLAY_DURATION } from '../constants';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
 import ControlButtonWrapper from './ControlButtonWrapper';
+import classes from './GameController.module.css'
 
 type TrackSequence = {
   playlistId: string;
@@ -92,7 +93,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
         {currentSong !== null && playlist.size > 0 && (
           <Stack style={{ flex: 1 }} justify='center'>
             {showSong ? (
-              <Text c='white' style={{ textAlign: 'center', overflow: 'scroll' }}>
+              <Text c='white' style={{ textAlign: 'center' }} className={classes.SongDisplay}>
                 {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
               </Text>
             ) : (
