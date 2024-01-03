@@ -43,6 +43,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
       });
       const randomStart = getRandomStartTime(MAX_PLAY_DURATION, playDuration);
       setStartFrom(randomStart);
+      console.log('play song from ', randomStart);
     }
   }
 
@@ -70,13 +71,20 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
 
   function playRandomSection() {
     setStartFrom(getRandomStartTime(MAX_PLAY_DURATION, playDuration));
-
     playSong();
   }
 
   function onPause() {
     setIsPlaying(false);
   }
+
+  useEffect(() => {
+    if (currentSong) {
+      if (!isPlaying) {
+        playSong();
+      }
+    }
+  }, [currentSong]);
 
   return (
     <Flex gap={20}>
@@ -117,16 +125,11 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
             src={currentSong?.song.preview_url ?? ''}
             ref={audioPlayerRef}
             showDownloadProgress={true}
+            autoPlay
             onPlay={onPlay}
             onPause={onPause}
             onEnded={() => setIsPlaying(false)}
             onPlayError={() => setIsPlaying(false)}
-            onLoadStart={() => {
-              pauseSong();
-              setTimeout(() => {
-                playSong();
-              }, 500);
-            }}
             onListen={() => {
               const currentTime = Date.now();
               if (currentTime - startTime > playDuration * 1000) {

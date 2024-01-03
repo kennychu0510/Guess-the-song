@@ -15,17 +15,19 @@ export default function Song(props: Props) {
 
   return (
     <Flex justify={'space-between'} align={'center'}>
-      <Box key={props.song.id}>
+      <Box key={props.song.id} mr={5}>
         <Text
           size='xl'
           style={{
             textAlign: 'left',
             fontWeight: isCurrentSong ? 'bold' : 'normal',
+            color: isCurrentSong ? 'orange' : undefined
           }}
+          
         >
           {props.song.name}
         </Text>
-        <Text style={{ textAlign: 'left', fontWeight: isCurrentSong ? 'bold' : 'normal' }} size='md'>
+        <Text style={{ textAlign: 'left', fontWeight: isCurrentSong ? 'bold' : 'normal', color: isCurrentSong ? 'orange' : undefined }} size='md'>
           {props.song.artists.map((item) => item.name).join(', ')}
         </Text>
       </Box>
