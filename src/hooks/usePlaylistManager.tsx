@@ -59,6 +59,8 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     setPlaylistInput('');
   }, [playlistResult.data]);
 
+  console.log(playlist)
+
   return {
     addPlaylist,
     removePlaylist,
