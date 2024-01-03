@@ -6,6 +6,7 @@ import useSpotifyManager from './hooks/useSpotifyManager';
 import Game from './pages/Game';
 import usePlaylistManager from './hooks/usePlaylistManager';
 import { PlaylistContext } from './context';
+import classes from './Page.module.css'
 
 function App() {
   const { getToken, sdk, logout } = useSpotifyManager();
@@ -22,7 +23,7 @@ function App() {
           {sdk !== null ? (
             <Game sdk={sdk} logout={logout} />
           ) : (
-            <Stack justify='center' style={{ height: '70dvh' }}>
+            <Stack justify='center' className={classes.Page}>
               <Button size='md' onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
                 Connect Spotify
               </Button>

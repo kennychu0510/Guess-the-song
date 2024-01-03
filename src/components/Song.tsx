@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function Song(props: Props) {
-  const { setCurrentSong, currentSong } = useContext(GameContext);
+  const { setCurrentSong, currentSong, audioPlayerRef } = useContext(GameContext);
 
   const isCurrentSong = currentSong?.song.id === props.song.id;
 
@@ -38,6 +38,9 @@ export default function Song(props: Props) {
             song: props.song,
             playlistId: props.playlistId,
           });
+          setTimeout(() => {
+            audioPlayerRef.current?.audio.current?.play();
+          }, 500)
         }}
       />
     </Flex>

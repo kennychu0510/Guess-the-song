@@ -1,12 +1,13 @@
-import { Button, Flex, Text } from '@mantine/core';
+import { Box, Button, Flex, Stack, Text } from '@mantine/core';
 import { Playlist } from '@spotify/web-api-ts-sdk';
-import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerTrackNext, IconRefresh } from '@tabler/icons-react';
+import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerPlay, IconPlayerTrackNext, IconRefresh } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
-import { MAX_PLAY_DURATION } from '../constants';
+import { BOTTOM_TAB_HEIGHT, MAX_PLAY_DURATION } from '../constants';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
 import ControlButtonWrapper from './ControlButtonWrapper';
+import classes from './GameController.module.css'
 
 type TrackSequence = {
   playlistId: string;
@@ -14,12 +15,13 @@ type TrackSequence = {
 };
 
 export default function GameController({ playlist, goToPlaylistManager }: { playlist: Map<string, Playlist>; goToPlaylistManager: () => void }) {
-  const { setCurrentSong, audioPlayerRef, currentSong, playDuration } = useContext(GameContext);
+  const { setCurrentSong, audioPlayerRef, currentSong, playDuration, gameMode } = useContext(GameContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [startFrom, setStartFrom] = useState(0);
+  const [showSong, setShowSong] = useState(gameMode === 'host');
 
   function pauseSong() {
     audioPlayerRef.current?.audio.current?.pause();
@@ -33,6 +35,9 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
     const currentSong = randomSequence[currentIndex];
     const song = playlist.get(currentSong.playlistId)?.tracks.items[currentSong.trackIndex].track;
     if (song && songIsTrack(song)) {
+      if (gameMode === 'guess') {
+        setShowSong(false);
+      }
       setCurrentSong({
         song,
         playlistId: randomSequence[currentIndex].playlistId,
@@ -79,74 +84,95 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
   }
 
   useEffect(() => {
-    if (currentSong) {
-      if (!isPlaying) {
-        playSong();
-      }
-    }
-  }, [currentSong]);
+    setShowSong(gameMode === 'host');
+  }, [gameMode]);
 
   return (
-    <Flex gap={20}>
-      {playlist.size === 0 ? (
-        <Button rightSection={<IconMusic />} onClick={goToPlaylistManager}>
-          Add a Playlist
-        </Button>
-      ) : (
-        <>
-          {isPlaying ? (
-            <ControlButtonWrapper label='Pause'>
-              <Button onClick={pauseSong} color='red'>
-                <IconMusicPause />
-              </Button>
-            </ControlButtonWrapper>
-          ) : (
-            currentSong !== null && (
-              <>
-                <ControlButtonWrapper label='Replay'>
-                  <Button onClick={playSong} color='green'>
-                    <IconRefresh />
-                  </Button>
-                </ControlButtonWrapper>
-                <ControlButtonWrapper label='New Section'>
-                  <Button onClick={playRandomSection} color='orange'>
-                    <IconPlayerTrackNext />
-                  </Button>
-                </ControlButtonWrapper>
-              </>
-            )
-          )}
-          <ControlButtonWrapper label='Next'>
-            <Button onClick={playRandomSong}>
-              <IconArrowsShuffle />
-            </Button>
-          </ControlButtonWrapper>
-          <AudioPlayer
-            src={currentSong?.song.preview_url ?? ''}
-            ref={audioPlayerRef}
-            showDownloadProgress={true}
-            autoPlay
-            onPlay={onPlay}
-            onPause={onPause}
-            onEnded={() => setIsPlaying(false)}
-            onPlayError={() => setIsPlaying(false)}
-            onListen={() => {
-              const currentTime = Date.now();
-              if (currentTime - startTime > playDuration * 1000) {
-                pauseSong();
-              }
-            }}
-            header={
-              <Text size={'xl'} c='black'>
+    <Box bottom={0} pos={'fixed'} left={0} right={0}>
+      <Stack align='center' justify='center' h={BOTTOM_TAB_HEIGHT} w={'100%'} bg={'#333'} p={10} mx={'auto'} gap={0}>
+        {currentSong !== null && playlist.size > 0 && (
+          <Stack style={{ flex: 1 }} justify='center'>
+            {showSong ? (
+              <Text c='white' style={{ textAlign: 'center' }} className={classes.SongDisplay}>
                 {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
               </Text>
-            }
-            // style={{ opacity: 1, position: 'absolute', zIndex: -1, left: 0, top: -250 }}
-            style={{ opacity: 0, position: 'absolute', zIndex: -1, left: 0 }}
-          />
-        </>
-      )}
-    </Flex>
+            ) : (
+              <Stack align='center'>
+                <Button onClick={() => setShowSong(true)}>Review Answer</Button>
+              </Stack>
+            )}
+          </Stack>
+        )}
+        <Flex gap={20} h={60}>
+          {playlist.size === 0 ? (
+            <Button rightSection={<IconMusic />} onClick={goToPlaylistManager}>
+              Add a Playlist
+            </Button>
+          ) : (
+            <>
+              {isPlaying ? (
+                <ControlButtonWrapper label='Pause'>
+                  <Button onClick={pauseSong} color='red'>
+                    <IconMusicPause />
+                  </Button>
+                </ControlButtonWrapper>
+              ) : (
+                currentSong !== null && (
+                  <>
+                    <ControlButtonWrapper label='Replay'>
+                      <Button onClick={playSong} color='green'>
+                        <IconRefresh />
+                      </Button>
+                    </ControlButtonWrapper>
+                    <ControlButtonWrapper label='New Section'>
+                      <Button onClick={playRandomSection} color='orange'>
+                        <IconPlayerTrackNext />
+                      </Button>
+                    </ControlButtonWrapper>
+                  </>
+                )
+              )}
+              {currentSong === null ? (
+                <ControlButtonWrapper label='Start Game'>
+                  <Button onClick={playRandomSong}>
+                    <IconPlayerPlay />
+                  </Button>
+                </ControlButtonWrapper>
+              ) : (
+                <ControlButtonWrapper label='Random'>
+                  <Button onClick={playRandomSong}>
+                    <IconArrowsShuffle />
+                  </Button>
+                </ControlButtonWrapper>
+              )}
+              <AudioPlayer
+                src={currentSong?.song.preview_url ?? ''}
+                ref={audioPlayerRef}
+                showDownloadProgress={true}
+                autoPlay
+                onPlay={onPlay}
+                onPause={onPause}
+                onEnded={() => setIsPlaying(false)}
+                onPlayError={() => setIsPlaying(false)}
+                onListen={() => {
+                  const currentTime = Date.now();
+                  if (currentTime - startTime > playDuration * 1000) {
+                    pauseSong();
+                  }
+                }}
+                header={
+                  <Text size={'xl'} c='black'>
+                    {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
+                  </Text>
+                }
+                // style={{ opacity: 1, position: 'absolute', zIndex: -1, left: 0, top: -250 }}
+                style={{ opacity: 0, position: 'absolute', zIndex: -1, left: 0 }}
+              />
+            </>
+          )}
+        </Flex>
+      </Stack>
+    </Box>
   );
 }
 

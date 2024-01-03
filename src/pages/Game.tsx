@@ -1,4 +1,4 @@
-import { Accordion, AccordionControl, Box, Button, Flex, Stack, Text, Title } from '@mantine/core';
+import { Accordion, AccordionControl, Button, Flex, Stack, Title } from '@mantine/core';
 import { SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { IconEdit, IconMusic, IconUserPlus } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -6,10 +6,10 @@ import GameController from '../components/GameController';
 import Scores from '../components/Scores';
 import Settings from '../components/Settings';
 import SongList from '../components/SongList';
-import useGameContext from '../hooks/useGameContext';
 import usePlaylistContext from '../hooks/usePlaylistContext';
 import PlayerManagement from './PlayerManagement';
 import PlaylistManagement from './PlaylistManagement';
+import classes from '../Page.module.css'
 
 type ModalTab = 'players' | 'playlist' | null;
 
@@ -18,8 +18,6 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
   const [modalOpened, setModalOpened] = useState<null | ModalTab>(null);
 
   const playlistManager = usePlaylistContext();
-  const { currentSong } = useGameContext();
-
   if (!playlistManager) return null;
 
   const { playlist } = playlistManager;
@@ -57,7 +55,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
   }
 
   return (
-    <Stack style={{ textAlign: 'start' }} mih={'80dvh'}>
+    <Stack style={{ textAlign: 'start' }} className={classes.Page}>
       <PlayerManagement players={players} setPlayers={setPlayers} onClose={closeModal} isOpened={modalOpened === 'players'} />
       <PlaylistManagement isOpened={modalOpened === 'playlist'} onClose={closeModal} sdk={sdk} />
       {players.size > 0 ? (
@@ -102,16 +100,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
         </Button>
       )}
       <Settings logout={logout} resetGame={resetGame} resetScores={resetScores} />
-      <Box bottom={0} pos={'fixed'} left={0} right={0}>
-        <Stack align='center' justify='center' h={150} w={'100%'} bg={'#333'} p={10} mx={'auto'}>
-          {currentSong !== null && playlist.size > 0 && (
-            <Text c='white' style={{ textAlign: 'center', overflow: 'scroll' }}> 
-              {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
-            </Text>
-          )}
-          <GameController playlist={playlist} goToPlaylistManager={goToPlaylistManager} />
-        </Stack>
-      </Box>
+      <GameController playlist={playlist} goToPlaylistManager={goToPlaylistManager} />
     </Stack>
   );
 }

@@ -1,0 +1,8 @@
+.SongDisplay {
+  overflow: scroll;
+  font-size: 16px;
+  @media (min-width: 500px) {
+    overflow: auto;
+    font-size: 24px;
+  }
+}

@@ -48,3 +48,5 @@ export const PlayIntervalValues = [
   { value: 15, label: 15 },
   { value: 20, label: 20 },
 ];
+
+export const BOTTOM_TAB_HEIGHT = 150
