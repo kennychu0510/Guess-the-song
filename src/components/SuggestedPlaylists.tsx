@@ -1,4 +1,4 @@
-import { Accordion, Select, Stack, Text } from '@mantine/core';
+import { Accordion, Select, Stack, Text, Title } from '@mantine/core';
 import { CountryCodeA2, Playlist, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -24,7 +24,7 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
   const playlist = featuredPlaylists.data?.playlists.items ?? [];
 
   return (
-    <Accordion>
+    <><Title size={'h2'}>Quick add</Title><Accordion>
       <Accordion.Item value='Personal Playlist'>
         <Accordion.Control>
           <Text>Personal Playlist</Text>
@@ -37,15 +37,15 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
       </Accordion.Item>
       <Accordion.Item value='Suggested Playlist'>
         <Accordion.Control>
-          <Text>Suggested Playlist</Text>
+          <Text>By Country</Text>
         </Accordion.Control>
         <Accordion.Panel>
           <Stack>
-            <Select size='md' value={country} onChange={setCountry} label={'Country'} placeholder='Select a Country' searchable data={SPOTIFY_COUNTRIES} />
+            <Select size='md' value={country} onChange={setCountry} placeholder='Select a Country' searchable data={SPOTIFY_COUNTRIES.map(country => country.code)} />
             <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={playlist} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>
-    </Accordion>
+    </Accordion></>
   );
 }

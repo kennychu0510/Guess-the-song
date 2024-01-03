@@ -1,25 +1,23 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { Playlist } from '@spotify/web-api-ts-sdk';
-import { IconArrowsShuffle, IconMusicPause, IconPlayerPlay } from '@tabler/icons-react';
+import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerPlay } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
+import { MAX_PLAY_DURATION } from '../constants';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
-import SongTimer from '../hooks/useSongTimer';
-import useSongTimer from '../hooks/useSongTimer';
-import { MAX_PLAY_DURATION } from '../constants';
 
 type TrackSequence = {
   playlistId: string;
   trackIndex: number;
 };
 
-export default function GameController({ playlist }: { playlist: Map<string, Playlist> }) {
-  const { setCurrentSong, audioPlayerRef, currentSong, playDuration, setPlayDuration } = useContext(GameContext);
+export default function GameController({ playlist, goToPlaylistManager }: { playlist: Map<string, Playlist>; goToPlaylistManager: () => void }) {
+  const { setCurrentSong, audioPlayerRef, currentSong, playDuration } = useContext(GameContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [startTime, setStartTime]= useState(Date.now())
+  const [startTime, setStartTime] = useState(Date.now());
 
   function pauseSong() {
     audioPlayerRef.current?.audio.current?.pause();
@@ -49,7 +47,7 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
   useEffect(() => {
     if (playlist.size === 0) return;
     const sequence: TrackSequence[] = [];
-    for (let p of playlist.values()) {
+    for (const p of playlist.values()) {
       const playlistId = p.id;
       p.tracks.items.forEach((_, i) => {
         sequence.push({ playlistId, trackIndex: i });
@@ -66,18 +64,19 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
     setIsPlaying(true);
     const time = new Date();
     time.setSeconds(time.getSeconds() + playDuration);
-    setStartTime(Date.now())
+    setStartTime(Date.now());
   }
 
   function onPause() {
     setIsPlaying(false);
-
   }
 
   return (
     <Flex gap={20}>
       {playlist.size === 0 ? (
-        <Text size='xl'>Add a playlist</Text>
+        <Button rightSection={<IconMusic/>} onClick={goToPlaylistManager}>
+          Add a Playlist
+        </Button>
       ) : (
         <>
           {isPlaying ? (
@@ -109,7 +108,7 @@ export default function GameController({ playlist }: { playlist: Map<string, Pla
               }, 500);
             }}
             onListen={() => {
-              const currentTime = Date.now()
+              const currentTime = Date.now();
               if (currentTime - startTime > playDuration * 1000) {
                 pauseSong();
               }

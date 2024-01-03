@@ -11,7 +11,7 @@ function CustomAccordionControl(props: Props) {
     <Center>
       <Accordion.Control {...restProps} />
       <ActionIcon size="lg" variant="subtle" color="gray">
-        <IconTrash size="1rem" onClick={onClick}/>
+        <IconTrash color='red' size="1rem" onClick={onClick}/>
       </ActionIcon>
     </Center>
   );
