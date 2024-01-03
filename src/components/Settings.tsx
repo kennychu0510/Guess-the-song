@@ -1,4 +1,4 @@
-import { Box, Button, InputLabel, Modal, Slider, Stack, Title } from '@mantine/core';
+import { Box, Button, Flex, Modal, Slider, Stack, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ type Props = {
 
 export default function Settings(props: Props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { playDuration, setPlayDuration, setCurrentSong } = useGameContext();
+  const { playDuration, setPlayDuration, setCurrentSong, gameMode, setGameMode } = useGameContext();
 
   const queryClient = useQueryClient();
 
@@ -55,10 +55,27 @@ export default function Settings(props: Props) {
           </Modal.Header>
           <Modal.Body>
             <Stack h={'80dvh'}>
-              <Box mb={20} style={{ flex: 1 }}>
-                <InputLabel>Song Play Duration (sec)</InputLabel>
-                <Slider value={playDuration} onChange={setPlayDuration} min={2} max={20} marks={PlayIntervalValues} />
-              </Box>
+              <Stack mb={20} style={{ flex: 1 }} gap={30}>
+                <Box>
+                  <Text size='md' fw={'bold'} mb={10}>
+                    Song Play Duration (sec)
+                  </Text>
+                  <Slider value={playDuration} onChange={setPlayDuration} min={2} max={20} marks={PlayIntervalValues} />
+                </Box>
+                <Box>
+                  <Text size='md' mb={10} fw={'bold'}>
+                    Game mode
+                  </Text>
+                  <Flex justify={'space-around'} gap={50}>
+                    <Button onClick={() => setGameMode('host')} variant={gameMode === 'host' ? 'filled' : 'outline'} w={'100%'}>
+                      With host
+                    </Button>
+                    <Button onClick={() => setGameMode('guess')} variant={gameMode === 'guess' ? 'filled' : 'outline'} w={'100%'}>
+                      Without host
+                    </Button>
+                  </Flex>
+                </Box>
+              </Stack>
               <Button onClick={onResetScores} color='green'>
                 Reset Scores
               </Button>

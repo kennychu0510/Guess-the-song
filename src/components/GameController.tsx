@@ -14,12 +14,13 @@ type TrackSequence = {
 };
 
 export default function GameController({ playlist, goToPlaylistManager }: { playlist: Map<string, Playlist>; goToPlaylistManager: () => void }) {
-  const { setCurrentSong, audioPlayerRef, currentSong, playDuration } = useContext(GameContext);
+  const { setCurrentSong, audioPlayerRef, currentSong, playDuration, gameMode } = useContext(GameContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [startFrom, setStartFrom] = useState(0);
+  const [showSong, setShowSong] = useState(gameMode === 'host');
 
   function pauseSong() {
     audioPlayerRef.current?.audio.current?.pause();
@@ -33,6 +34,9 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
     const currentSong = randomSequence[currentIndex];
     const song = playlist.get(currentSong.playlistId)?.tracks.items[currentSong.trackIndex].track;
     if (song && songIsTrack(song)) {
+      if (gameMode === 'guess') {
+        setShowSong(false);
+      }
       setCurrentSong({
         song,
         playlistId: randomSequence[currentIndex].playlistId,
@@ -78,16 +82,26 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
     setIsPlaying(false);
   }
 
+  useEffect(() => {
+    setShowSong(gameMode === 'host');
+  }, [gameMode]);
+
   return (
     <Box bottom={0} pos={'fixed'} left={0} right={0}>
-      <Stack align='center' justify='center' h={BOTTOM_TAB_HEIGHT} w={'100%'} bg={'#333'} p={10} mx={'auto'}>
-        <Stack style={{flex: 1}} justify='center'>
-          {currentSong !== null && playlist.size > 0 && (
-            <Text c='white' style={{ textAlign: 'center', overflow: 'scroll' }}>
-              {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
-            </Text>
-          )}
-        </Stack>
+      <Stack align='center' justify='center' h={BOTTOM_TAB_HEIGHT} w={'100%'} bg={'#333'} p={10} mx={'auto'} gap={0}>
+        {currentSong !== null && playlist.size > 0 && (
+          <Stack style={{ flex: 1 }} justify='center'>
+            {showSong ? (
+              <Text c='white' style={{ textAlign: 'center', overflow: 'scroll' }}>
+                {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
+              </Text>
+            ) : (
+              <Stack align='center'>
+                <Button onClick={() => setShowSong(true)}>Review Answer</Button>
+              </Stack>
+            )}
+          </Stack>
+        )}
         <Flex gap={20} h={60}>
           {playlist.size === 0 ? (
             <Button rightSection={<IconMusic />} onClick={goToPlaylistManager}>

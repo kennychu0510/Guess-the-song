@@ -9,18 +9,24 @@ type CurrentSong = {
   song: Track;
 };
 
+export type GameMode = 'host' | 'guess'
+
 export const GameContext = createContext<{
   currentSong: CurrentSong | null;
   setCurrentSong: React.Dispatch<React.SetStateAction<CurrentSong | null>>;
   audioPlayerRef: React.RefObject<AudioPlayer>;
   playDuration: number;
   setPlayDuration: React.Dispatch<React.SetStateAction<number>>;
+  gameMode: GameMode;
+  setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
 }>({
   currentSong: null,
   setCurrentSong: () => {},
   audioPlayerRef: React.createRef<AudioPlayer>(),
   playDuration: 0,
   setPlayDuration: () => {},
+  gameMode: 'host',
+  setGameMode: () => {},
 });
 
 type IPlaylistContext = ReturnType<typeof usePlaylistManager> | null;
