@@ -102,16 +102,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
         </Button>
       )}
       <Settings logout={logout} resetGame={resetGame} resetScores={resetScores} />
-      <Box bottom={0} pos={'fixed'} left={0} right={0}>
-        <Stack align='center' justify='center' h={150} w={'100%'} bg={'#333'} p={10} mx={'auto'}>
-          {currentSong !== null && playlist.size > 0 && (
-            <Text c='white' style={{ textAlign: 'center', overflow: 'scroll' }}> 
-              {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
-            </Text>
-          )}
-          <GameController playlist={playlist} goToPlaylistManager={goToPlaylistManager} />
-        </Stack>
-      </Box>
+      <GameController playlist={playlist} goToPlaylistManager={goToPlaylistManager} />
     </Stack>
   );
 }

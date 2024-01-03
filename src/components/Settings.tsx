@@ -2,7 +2,7 @@ import { Box, Button, InputLabel, Modal, Slider, Stack, Title } from '@mantine/c
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { PlayIntervalValues } from '../constants';
+import { BOTTOM_TAB_HEIGHT, PlayIntervalValues } from '../constants';
 import useGameContext from '../hooks/useGameContext';
 
 type Props = {
@@ -41,7 +41,7 @@ export default function Settings(props: Props) {
 
   return (
     <>
-      <Button style={{ width: '100%', marginTop: 'auto', marginBottom: 150 }} rightSection={<IconSettings />} onClick={open}>
+      <Button style={{ width: '100%', marginTop: 'auto', marginBottom: BOTTOM_TAB_HEIGHT }} rightSection={<IconSettings />} onClick={open}>
         Settings
       </Button>
       <Modal.Root fullScreen opened={opened} onClose={close} centered>

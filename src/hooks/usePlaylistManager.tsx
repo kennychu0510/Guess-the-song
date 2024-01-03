@@ -2,9 +2,11 @@ import { Playlist, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getPlaylistById } from '../services/getPlaylist';
+import useGameContext from './useGameContext';
 
 export default function usePlaylistManager(sdk: SpotifyApi | null) {
   const [playlistInput, setPlaylistInput] = useState('');
+  const {setCurrentSong, audioPlayerRef} = useGameContext()
 
   const [playlist, setPlaylist] = useState<Map<string, Playlist>>(new Map());
   const [playlistInputError, setPlaylistInputError] = useState<string>('');
@@ -37,6 +39,9 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     } else {
       setPlaylistInput(playlistId);
     }
+    setCurrentSong(null)
+    audioPlayerRef.current!.audio.current!.src = ''
+
   }
 
 
