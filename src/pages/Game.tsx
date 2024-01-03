@@ -53,7 +53,7 @@ export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => v
   }
 
   function goToPlaylistManager() {
-    setModalOpened('playlist')
+    setModalOpened('playlist');
   }
 
   return (

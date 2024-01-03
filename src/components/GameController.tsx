@@ -1,11 +1,12 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { Playlist } from '@spotify/web-api-ts-sdk';
-import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerPlay } from '@tabler/icons-react';
+import { IconArrowsShuffle, IconMusic, IconMusicPause, IconPlayerTrackNext, IconRefresh } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { MAX_PLAY_DURATION } from '../constants';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
+import ControlButtonWrapper from './ControlButtonWrapper';
 
 type TrackSequence = {
   playlistId: string;
@@ -18,6 +19,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
+  const [startFrom, setStartFrom] = useState(0);
 
   function pauseSong() {
     audioPlayerRef.current?.audio.current?.pause();
@@ -40,7 +42,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
         return index + 1;
       });
       const randomStart = getRandomStartTime(MAX_PLAY_DURATION, playDuration);
-      audioPlayerRef.current?.setJumpTime(randomStart);
+      setStartFrom(randomStart);
     }
   }
 
@@ -59,12 +61,17 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
   }, [playlist]);
 
   function onPlay() {
-    const randomStart = getRandomStartTime(MAX_PLAY_DURATION, playDuration);
-    audioPlayerRef.current?.setJumpTime(randomStart);
+    audioPlayerRef.current!.audio.current!.currentTime = startFrom;
     setIsPlaying(true);
     const time = new Date();
     time.setSeconds(time.getSeconds() + playDuration);
     setStartTime(Date.now());
+  }
+
+  function playRandomSection() {
+    setStartFrom(getRandomStartTime(MAX_PLAY_DURATION, playDuration));
+
+    playSong();
   }
 
   function onPause() {
@@ -74,25 +81,38 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
   return (
     <Flex gap={20}>
       {playlist.size === 0 ? (
-        <Button rightSection={<IconMusic/>} onClick={goToPlaylistManager}>
+        <Button rightSection={<IconMusic />} onClick={goToPlaylistManager}>
           Add a Playlist
         </Button>
       ) : (
         <>
           {isPlaying ? (
-            <Button onClick={pauseSong} color='red'>
-              <IconMusicPause />
-            </Button>
+            <ControlButtonWrapper label='Pause'>
+              <Button onClick={pauseSong} color='red'>
+                <IconMusicPause />
+              </Button>
+            </ControlButtonWrapper>
           ) : (
             currentSong !== null && (
-              <Button onClick={playSong} color='green'>
-                <IconPlayerPlay />
-              </Button>
+              <>
+                <ControlButtonWrapper label='Replay'>
+                  <Button onClick={playSong} color='green'>
+                    <IconRefresh />
+                  </Button>
+                </ControlButtonWrapper>
+                <ControlButtonWrapper label='New Section'>
+                  <Button onClick={playRandomSection} color='orange'>
+                    <IconPlayerTrackNext />
+                  </Button>
+                </ControlButtonWrapper>
+              </>
             )
           )}
-          <Button rightSection={<IconArrowsShuffle />} onClick={playRandomSong}>
-            Play Random
-          </Button>
+          <ControlButtonWrapper label='Next'>
+            <Button onClick={playRandomSong}>
+              <IconArrowsShuffle />
+            </Button>
+          </ControlButtonWrapper>
           <AudioPlayer
             src={currentSong?.song.preview_url ?? ''}
             ref={audioPlayerRef}
@@ -118,6 +138,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
                 {currentSong?.song.name} - {currentSong?.song.artists.map((item) => item.name).join(', ')}
               </Text>
             }
+            // style={{ opacity: 1, position: 'absolute', zIndex: -1, left: 0, top: -250 }}
             style={{ opacity: 0, position: 'absolute', zIndex: -1, left: 0 }}
           />
         </>
@@ -127,5 +148,5 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
 }
 
 function getRandomStartTime(maxDuration: number, playDuration: number) {
-  return Math.floor(Math.random() * (maxDuration - playDuration)) * 1000;
+  return Math.floor(Math.random() * (maxDuration - playDuration));
 }
