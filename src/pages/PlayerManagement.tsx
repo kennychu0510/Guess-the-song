@@ -1,5 +1,5 @@
 import { Button, Flex, Modal, Stack, Text, TextInput, Title } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import React, { useRef } from 'react';
 
 export default function PlayerManagement({
@@ -35,16 +35,6 @@ export default function PlayerManagement({
     });
   }
 
-  function resetScores() {
-    setPlayers(players => {
-      const newPlayers = new Map(players);
-      newPlayers.forEach((_, key) => {
-        newPlayers.set(key, 0);
-      });
-      return newPlayers;
-    })
-  }
-
   return (
     <Modal.Root fullScreen opened={isOpened} onClose={onClose} centered>
       <Modal.Overlay />
@@ -56,9 +46,9 @@ export default function PlayerManagement({
           <Modal.CloseButton />
         </Modal.Header>
         <Modal.Body maw={500} mx={'auto'}>
-          <Stack mb={2} h={'80dvh'}>
+          <Stack>
             <TextInput ref={playerInputRef} size='xl' placeholder='Name'></TextInput>
-            <Button onClick={addPlayer} size='md'>
+            <Button rightSection={<IconPlus />} onClick={addPlayer} size='md'>
               Add
             </Button>
             {Array.from(players).map(([player, score]) => (
@@ -75,7 +65,6 @@ export default function PlayerManagement({
               </Flex>
             ))}
           </Stack>
-          <Button w={'100%'} color='red' onClick={resetScores}>Reset Scores</Button>
         </Modal.Body>
       </Modal.Content>
     </Modal.Root>
