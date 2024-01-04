@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { BOTTOM_TAB_HEIGHT, PlayIntervalValues } from '../constants';
 import useGameContext from '../hooks/useGameContext';
 import classes from '../Page.module.css'
+import InstallPWAButton from './InstallPWAButton';
 
 type Props = {
   logout: () => void;
@@ -83,6 +84,7 @@ export default function Settings(props: Props) {
               <Button onClick={onResetGame} color='red'>
                 Reset Game
               </Button>
+              <InstallPWAButton/>
               <Button onClick={onLogout}>Logout</Button>
             </Stack>
           </Modal.Body>
