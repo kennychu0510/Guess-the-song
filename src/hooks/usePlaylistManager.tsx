@@ -3,14 +3,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { getPlaylistById } from '../services/getPlaylist';
 import useGameContext from './useGameContext';
+import { songIsTrack } from '../helper';
 
 export default function usePlaylistManager(sdk: SpotifyApi | null) {
   const [playlistInput, setPlaylistInput] = useState('');
-  const {setCurrentSong, audioPlayerRef} = useGameContext()
+  const { setCurrentSong, audioPlayerRef } = useGameContext();
 
   const [playlist, setPlaylist] = useState<Map<string, Playlist>>(new Map());
   const [playlistInputError, setPlaylistInputError] = useState<string>('');
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const playlistResult = useQuery({
     queryKey: ['playlistItems', playlistInput],
@@ -31,19 +32,17 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     const cachedResult = queryClient.getQueryData(['playlistItems', playlistId]);
     if (cachedResult) {
       const playlist = cachedResult as Playlist;
-      setPlaylist(list => {
+      setPlaylist((list) => {
         const newList = new Map(list);
         newList.set(playlist.id, playlist as Playlist);
         return newList;
-      })
+      });
     } else {
       setPlaylistInput(playlistId);
     }
-    setCurrentSong(null)
-    audioPlayerRef.current!.audio.current!.src = ''
-
+    setCurrentSong(null);
+    audioPlayerRef.current!.audio.current!.src = '';
   }
-
 
   function removePlaylist(id: string) {
     setPlaylist((list) => {
@@ -53,18 +52,19 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     });
   }
 
-
   useEffect(() => {
     if (!playlistResult.data) return;
-    setPlaylist(list => {
+    setPlaylist((list) => {
       const newList = new Map(list);
-      newList.set(playlistResult.data!.id, playlistResult.data!);
+      const validPlaylist = playlistResult.data as Playlist;
+      validPlaylist.tracks.items = validPlaylist.tracks.items.filter((item) => {
+        return songIsTrack(item.track) && item.track.preview_url !== null;
+      });
+      newList.set(playlistResult.data!.id, validPlaylist);
       return newList;
-    })
+    });
     setPlaylistInput('');
   }, [playlistResult.data]);
-
-  console.log(playlist)
 
   return {
     addPlaylist,
@@ -74,5 +74,6 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     setPlaylistInputError,
     playlist,
     setPlaylist,
+    playlistInput,
   };
 }
