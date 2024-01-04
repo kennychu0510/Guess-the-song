@@ -48,13 +48,13 @@ export default function Settings(props: Props) {
       <Modal.Root fullScreen opened={opened} onClose={close} centered>
         <Modal.Overlay />
         <Modal.Content>
-          <Modal.Header>
+          <Modal.Header maw={500} mx={'auto'}>
             <Modal.Title>
               <Title>Settings</Title>
             </Modal.Title>
             <Modal.CloseButton />
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body maw={500} mx={'auto'}>
             <Stack className={classes.Page}>
               <Stack mb={20} style={{ flex: 1 }} gap={30}>
                 <Box>

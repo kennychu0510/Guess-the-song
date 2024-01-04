@@ -7,7 +7,7 @@ import { BOTTOM_TAB_HEIGHT, MAX_PLAY_DURATION } from '../constants';
 import { GameContext } from '../context';
 import { songIsTrack } from '../helper';
 import ControlButtonWrapper from './ControlButtonWrapper';
-import classes from './GameController.module.css'
+import classes from './GameController.module.css';
 
 type TrackSequence = {
   playlistId: string;
@@ -103,7 +103,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
             )}
           </Stack>
         )}
-        <Flex gap={20} h={60}>
+        <Flex gap={20} h={60} align={'center'}>
           {playlist.size === 0 ? (
             <Button rightSection={<IconMusic />} onClick={goToPlaylistManager}>
               Add a Playlist

@@ -2,6 +2,7 @@ import { Accordion, AccordionControl, Button, Flex, Stack, Title } from '@mantin
 import { SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { IconEdit, IconMusic, IconUserPlus } from '@tabler/icons-react';
 import { useState } from 'react';
+import classes from '../Page.module.css';
 import GameController from '../components/GameController';
 import Scores from '../components/Scores';
 import Settings from '../components/Settings';
@@ -9,7 +10,6 @@ import SongList from '../components/SongList';
 import usePlaylistContext from '../hooks/usePlaylistContext';
 import PlayerManagement from './PlayerManagement';
 import PlaylistManagement from './PlaylistManagement';
-import classes from '../Page.module.css'
 
 type ModalTab = 'players' | 'playlist' | null;
 

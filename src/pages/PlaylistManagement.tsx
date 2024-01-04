@@ -28,13 +28,13 @@ export default function PlaylistManagement({ sdk, isOpened, onClose }: { sdk: Sp
     <Modal.Root fullScreen opened={isOpened} onClose={onClose} centered>
       <Modal.Overlay />
       <Modal.Content>
-        <Modal.Header>
+        <Modal.Header maw={500} mx={'auto'}>
           <Modal.Title>
             <Title>Manage Playlist</Title>
           </Modal.Title>
           <Modal.CloseButton />
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body maw={500} mx={'auto'}>
           <Stack>
           {playlist.size > 0 ? <Title size={'h2'}>Current Playlist</Title> : <Title size={'h2'}>Your playlist is empty</Title>}
             <Accordion>
