@@ -1,4 +1,4 @@
-import { Box, Button, Modal, SegmentedControl, Slider, Stack, Text, Title } from '@mantine/core';
+import { Box, Button, Modal, SegmentedControl, Slider, Stack, Switch, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ type Props = {
 
 export default function Settings(props: Props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { playDuration, setPlayDuration, setCurrentSong, gameMode, setGameMode, numOfAns, setNumOfAns } = useGameContext();
+  const { playDuration, setPlayDuration, setCurrentSong, gameMode, setGameMode, modeConfig, setModeConfig } = useGameContext();
 
   const queryClient = useQueryClient();
 
@@ -45,6 +45,12 @@ export default function Settings(props: Props) {
   function onChangeGameMode(value: string) {
     setGameMode(value as GameMode);
   }
+
+  function onChangeNumOfAns(value: number) {
+    setModeConfig({ ...modeConfig, numOfAns: value });
+  }
+
+  console.log(modeConfig.showArtist)
 
   return (
     <>
@@ -76,12 +82,20 @@ export default function Settings(props: Props) {
                   <SegmentedControl fullWidth data={GameModes} value={gameMode} onChange={onChangeGameMode} />
                 </Box>
                 {gameMode === 'MC' && (
-                  <Box>
-                    <Text size='md' mb={10} fw={'bold'}>
-                      Number of Answers
-                    </Text>
-                    <Slider value={numOfAns} onChange={setNumOfAns} min={4} max={10} marks={NumOfAnsMarks} />
-                  </Box>
+                  <>
+                    <Box>
+                      <Text size='md' mb={10} fw={'bold'}>
+                        Number of Answers
+                      </Text>
+                      <Slider value={modeConfig.numOfAns} onChange={onChangeNumOfAns} min={4} max={10} marks={NumOfAnsMarks} />
+                    </Box>
+                    <Box>
+                      <Text size='md' mb={10} fw={'bold'}>
+                        Show Artist
+                      </Text>
+                      <Switch size="xl" onLabel='Yes' offLabel='No' checked={modeConfig.showArtist} onChange={(event) => setModeConfig({...modeConfig, showArtist: event.currentTarget.checked})} />
+                    </Box>
+                  </>
                 )}
               </Stack>
               <Button onClick={onResetScores} color='green'>

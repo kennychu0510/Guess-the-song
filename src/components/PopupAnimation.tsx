@@ -8,7 +8,7 @@ export default function PopupAnimation({ animation, onEnded }: { animation: stri
       {animation && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <Stack style={{ zIndex: 100, position: 'absolute', height: '100dvh', width: '100vw', top: 0, bottom: 0, left: 0, right: 0 }} justify='center' align='center'>
-            <Stack p={20} style={{ borderRadius: 20 }} bg={'#333'} w={200} h={200} justify='center' align='center'>
+            <Stack style={{ borderRadius: 20 }} bg={'#333'} w={200} h={200} justify='center' align='center'>
               <Lottie animationData={animation} onLoopComplete={onEnded} />
             </Stack>
           </Stack>

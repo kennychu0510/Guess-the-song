@@ -1,7 +1,7 @@
 import { Track } from '@spotify/web-api-ts-sdk';
 import React, { useRef, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
-import { GameContext, GameMode } from './context';
+import { GameContext, GameMode, ModeConfig } from './context';
 import { DEFAULT_PLAY_DURATION } from './constants';
 
 export default function GameLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +13,11 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
   const [playDuration, setPlayDuration] = useState(DEFAULT_PLAY_DURATION);
   const [gameMode, setGameMode] = useState<GameMode>('Host');
   const [players, setPlayers] = useState<Map<string, number>>(new Map());
-  const [numOfAns, setNumOfAns] = useState(5);
+  const [modeConfig, setModeConfig] = useState<ModeConfig>({
+    numOfAns: 5,
+    showArtist: true,
+    showSong: true,
+  });
 
   function addScore(name: string, amount?: number) {
     setPlayers((list) => {
@@ -54,8 +58,8 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
         addScore,
         resetGame,
         resetScores,
-        numOfAns,
-        setNumOfAns,
+        modeConfig,
+        setModeConfig
       }}
     >
       {children}

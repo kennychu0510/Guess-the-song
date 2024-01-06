@@ -10,9 +10,20 @@ type Props = {
 };
 
 export default function Song(props: Props) {
-  const { setCurrentSong, currentSong, audioPlayerRef } = useContext(GameContext);
+  const { setCurrentSong, currentSong, audioPlayerRef, setModeConfig, modeConfig } = useContext(GameContext);
 
   const isCurrentSong = currentSong?.song.id === props.song.id;
+
+  function onPreviewSong() {
+    setCurrentSong({
+      song: props.song,
+      playlistId: props.playlistId,
+    });
+    setModeConfig({ ...modeConfig, showSong: true })
+    setTimeout(() => {
+      audioPlayerRef.current?.audio.current?.play();
+    }, 500)
+  }
 
   return (
     <Flex justify={'space-between'} align={'center'}>
@@ -34,15 +45,7 @@ export default function Song(props: Props) {
       </Box>
       <Image
         src={props.song.album.images[props.song.album.images.length - 1].url}
-        onClick={() => {
-          setCurrentSong({
-            song: props.song,
-            playlistId: props.playlistId,
-          });
-          setTimeout(() => {
-            audioPlayerRef.current?.audio.current?.play();
-          }, 500)
-        }}
+        onClick={onPreviewSong}
       />
     </Flex>
   );

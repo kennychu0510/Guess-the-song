@@ -26,7 +26,7 @@ export default function AnswerModal(props: Props) {
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const [animation, setAnimation] = useState<any>(null);
   const [page, setPage] = useState<Page>('selectAnswer');
-  const { players, addScore } = useGameContext();
+  const { players, addScore, modeConfig } = useGameContext();
 
   useEffect(() => {
     setSelectedAnswer('');
@@ -43,7 +43,7 @@ export default function AnswerModal(props: Props) {
   function onAnimationEnd() {
     setAnimation(null);
     setPage('selectAnswer');
-    onDoneAnswer()
+    onDoneAnswer();
   }
 
   function onConfirmPlayer() {
@@ -82,7 +82,7 @@ export default function AnswerModal(props: Props) {
                   <Flex key={option.id} align={'center'} onClick={() => setSelectedAnswer(option.id)}>
                     <Box style={{ flex: 1 }}>
                       <Text fw={'bold'}>{option.name}</Text>
-                      <Text size='sm'>{displayArtist(option.artists)}</Text>
+                      {modeConfig.showArtist && <Text size='sm'>{displayArtist(option.artists)}</Text>}
                     </Box>
                     <Radio checked={selectedAnswer === option.id} onChange={() => setSelectedAnswer(option.id)} />
                   </Flex>

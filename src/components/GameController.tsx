@@ -17,14 +17,21 @@ type TrackSequence = {
 };
 
 export default function GameController({ playlist, goToPlaylistManager }: { playlist: Map<string, Playlist>; goToPlaylistManager: () => void }) {
-  const { setCurrentSong, audioPlayerRef, currentSong, playDuration, gameMode, numOfAns } = useContext(GameContext);
+  const {
+    setCurrentSong,
+    audioPlayerRef,
+    currentSong,
+    playDuration,
+    gameMode,
+    modeConfig,
+    setModeConfig,
+  } = useContext(GameContext);
   const [isPlaying, setIsPlaying] = useState(false);
   const [randomSequence, setRandomSequence] = useState<TrackSequence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [startFrom, setStartFrom] = useState(0);
   const [showAnswerModal, setShowAnswerModal] = useState(false);
-  const [showSong, setShowSong] = useState(gameMode === 'Host');
   const [possibleAnswers, setPossibleAnswers] = useState<Track[]>([]);
 
   function pauseSong() {
@@ -35,12 +42,22 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
     audioPlayerRef.current?.audio.current?.play();
   }
 
+  function setSongDisplayTrue() {
+    setModeConfig({ ...modeConfig, showSong: true });
+  }
+
+  function setSongDisplayFalse() {
+    setModeConfig({ ...modeConfig, showSong: false });
+  }
+
   function playRandomSong() {
     const currentSong = randomSequence[currentIndex];
     const song = playlist.get(currentSong.playlistId)?.tracks.items[currentSong.trackIndex].track;
     if (song && songIsTrack(song)) {
-      if (gameMode !== 'Host') {
-        setShowSong(false);
+      if (gameMode === 'Host') {
+        setSongDisplayTrue();
+      } else {
+        setSongDisplayFalse();
       }
       setCurrentSong({
         song,
@@ -56,7 +73,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
         const remainingSongs = randomSequence.filter((item) => item.trackIndex !== currentSong.trackIndex);
         const correctAnswer = playlist.get(currentSong.playlistId)?.tracks.items[currentSong.trackIndex].track as Track;
         const shuffledSongs = _.shuffle(remainingSongs);
-        const wrongAnswers = shuffledSongs.slice(0, numOfAns).map((item) => playlist.get(item.playlistId)?.tracks.items[item.trackIndex].track as Track);
+        const wrongAnswers = shuffledSongs.slice(0, modeConfig.numOfAns).map((item) => playlist.get(item.playlistId)?.tracks.items[item.trackIndex].track as Track);
         const answers = _.shuffle([correctAnswer, ...wrongAnswers]);
         return answers;
       });
@@ -102,7 +119,11 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
   }
 
   useEffect(() => {
-    setShowSong(gameMode === 'Host');
+    if (gameMode === 'Host') {
+      setSongDisplayTrue();
+    } else {
+      setSongDisplayFalse();
+    }
   }, [gameMode]);
 
   function onAnswer() {
@@ -111,7 +132,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
 
   function onDoneAnswer() {
     setShowAnswerModal(false);
-    setShowSong(true);
+    setSongDisplayTrue();
   }
 
   return (
@@ -119,14 +140,14 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
       <Stack align='center' justify='center' h={BOTTOM_TAB_HEIGHT} w={'100%'} bg={'#333'} p={25} pt={10} mx={'auto'} gap={0}>
         {currentSong !== null && playlist.size > 0 && (
           <Stack style={{ flex: 1 }} justify='center'>
-            {showSong ? (
+            {modeConfig.showSong ? (
               <Text c='white' style={{ textAlign: 'center' }} className={classes.SongDisplay}>
                 {currentSong?.song.name} - {displayArtist(currentSong?.song.artists)}
               </Text>
             ) : (
               <Stack align='center'>
                 {gameMode === 'No Host' ? (
-                  <Button onClick={() => setShowSong(true)}>Review Answer</Button>
+                  <Button onClick={setSongDisplayTrue}>Review Answer</Button>
                 ) : (
                   <Button onClick={onAnswer} color={'green'}>
                     Answer

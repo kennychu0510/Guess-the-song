@@ -12,6 +12,12 @@ export type CurrentSong = {
 export const GameModes = ['Host', 'No Host', 'MC']
 export type GameMode = 'Host' | 'No Host' | 'MC';
 
+export type ModeConfig = {
+  numOfAns: number;
+  showArtist: boolean;
+  showSong: boolean;
+}
+
 
 export const GameContext = createContext<{
   currentSong: CurrentSong | null;
@@ -26,8 +32,8 @@ export const GameContext = createContext<{
   addScore: (playerId: string, score?: number) => void;
   resetScores: () => void;
   resetGame: () => void
-  numOfAns: number;
-  setNumOfAns: React.Dispatch<React.SetStateAction<number>>;
+  modeConfig: ModeConfig
+  setModeConfig: React.Dispatch<React.SetStateAction<ModeConfig>>
 }>({
   currentSong: null,
   setCurrentSong: () => {},
@@ -41,8 +47,12 @@ export const GameContext = createContext<{
   addScore: () => {},
   resetScores: () => {},
   resetGame: () => {},
-  numOfAns: 4,
-  setNumOfAns: () => {}
+  modeConfig: {
+    numOfAns: 4,
+    showArtist: true,
+    showSong: true,
+  },
+  setModeConfig: () => {}
 });
 
 type IPlaylistContext = ReturnType<typeof usePlaylistManager> | null;
