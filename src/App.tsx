@@ -9,6 +9,7 @@ import { PlaylistContext } from './context';
 import classes from './Page.module.css';
 import InstallPWAButton from './components/InstallPWAButton';
 
+
 function App() {
   const { getToken, sdk, logout } = useSpotifyManager();
   const playlistManager = usePlaylistManager(sdk);

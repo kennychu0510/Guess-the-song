@@ -2,6 +2,8 @@ import { Button } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
+import { useOs } from '@mantine/hooks';
+
 
 export default function InstallPWAButton() {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
@@ -10,6 +12,8 @@ export default function InstallPWAButton() {
     key: 'pwaInstalled',
     defaultValue: false,
   });
+  const os = useOs();
+
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -32,6 +36,7 @@ export default function InstallPWAButton() {
   }, []);
 
   async function installPWA() {
+    console.log(installPrompt)
     if (!installPrompt) return;
     const result = await installPrompt.prompt();
     if (result.outcome === 'accepted') {
@@ -39,7 +44,7 @@ export default function InstallPWAButton() {
     }
   }
 
-  if (pwaInstalled) return null;
+  if (pwaInstalled || os === 'ios') return null;
 
   return (
     <Button onClick={installPWA} id='install' hidden={!showButton} color='black' rightSection={<IconDownload />}>

@@ -8,6 +8,7 @@ export default defineConfig({
     devOptions: {
       enabled: true
     },
+    injectRegister: 'auto',
     registerType: 'autoUpdate',
     includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
     manifest: {
