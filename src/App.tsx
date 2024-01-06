@@ -2,12 +2,12 @@ import { Button, Stack, Text, Title } from '@mantine/core';
 import { IconBrandSpotify } from '@tabler/icons-react';
 import './App.css';
 import GameLayout from './GameLayout';
-import useSpotifyManager from './hooks/useSpotifyManager';
-import Game from './pages/Game';
-import usePlaylistManager from './hooks/usePlaylistManager';
-import { PlaylistContext } from './context';
 import classes from './Page.module.css';
 import InstallPWAButton from './components/InstallPWAButton';
+import { PlaylistContext } from './context';
+import usePlaylistManager from './hooks/usePlaylistManager';
+import useSpotifyManager from './hooks/useSpotifyManager';
+import Game from './pages/Game';
 
 
 function App() {
