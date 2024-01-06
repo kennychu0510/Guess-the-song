@@ -172,6 +172,7 @@ export default function GameController({ playlist, goToPlaylistManager }: { play
           )}
         </Flex>
       </Stack>
+      <Box className={classes.SafeAreaBottom} bg={'#333'}/>
     </Box>
   );
 }
