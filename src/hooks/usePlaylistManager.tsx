@@ -40,8 +40,7 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
     } else {
       setPlaylistInput(playlistId);
     }
-    setCurrentSong(null);
-    audioPlayerRef.current!.audio.current!.src = '';
+    clearAudio()
   }
 
   function removePlaylist(id: string) {
@@ -50,6 +49,14 @@ export default function usePlaylistManager(sdk: SpotifyApi | null) {
       newList.delete(id);
       return newList;
     });
+    clearAudio()
+  }
+
+  function clearAudio() {
+    if (audioPlayerRef.current?.audio.current) {
+      audioPlayerRef.current.audio.current.src = '';
+    }
+    setCurrentSong(null)
   }
 
   useEffect(() => {

@@ -1,0 +1,4 @@
+.Page {
+  min-height: calc(100dvh - 150px);
+  padding-bottom: 25px;
+}

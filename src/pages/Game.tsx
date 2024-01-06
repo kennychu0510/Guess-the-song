@@ -10,41 +10,18 @@ import SongList from '../components/SongList';
 import usePlaylistContext from '../hooks/usePlaylistContext';
 import PlayerManagement from './PlayerManagement';
 import PlaylistManagement from './PlaylistManagement';
+import useGameContext from '../hooks/useGameContext';
 
 type ModalTab = 'players' | 'playlist' | null;
 
 export default function Game({ sdk, logout }: { sdk: SpotifyApi; logout: () => void }) {
-  const [players, setPlayers] = useState<Map<string, number>>(new Map());
   const [modalOpened, setModalOpened] = useState<null | ModalTab>(null);
 
   const playlistManager = usePlaylistContext();
+  const { players, setPlayers, addScore, resetGame, resetScores } = useGameContext();
   if (!playlistManager) return null;
 
   const { playlist } = playlistManager;
-
-  function addScore(name: string, amount?: number) {
-    setPlayers((list) => {
-      const existingScore = list.get(name);
-      if (existingScore === undefined) return list;
-      const newList = new Map(list);
-      newList.set(name, existingScore + (amount ?? 1));
-      return newList;
-    });
-  }
-
-  function resetScores() {
-    setPlayers((players) => {
-      const newPlayers = new Map(players);
-      newPlayers.forEach((_, key) => {
-        newPlayers.set(key, 0);
-      });
-      return newPlayers;
-    });
-  }
-
-  function resetGame() {
-    setPlayers(new Map());
-  }
 
   function closeModal() {
     setModalOpened(null);

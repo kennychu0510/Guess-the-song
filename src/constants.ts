@@ -266,4 +266,11 @@ export const PlayIntervalValues = [
   { value: 20, label: 20 },
 ];
 
-export const BOTTOM_TAB_HEIGHT = 150
+export const NumOfAnsMarks = [
+  { value: 4, label: 4 },
+  { value: 6, label: 6 },
+  { value: 8, label: 8 },
+  { value: 10, label: 10 },
+];
+
+export const BOTTOM_TAB_HEIGHT = 200

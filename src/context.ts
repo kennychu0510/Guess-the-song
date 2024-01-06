@@ -4,12 +4,14 @@ import { createContext } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import usePlaylistManager from './hooks/usePlaylistManager';
 
-type CurrentSong = {
+export type CurrentSong = {
   playlistId: string;
   song: Track;
 };
 
-export type GameMode = 'host' | 'guess'
+export const GameModes = ['Host', 'No Host', 'MC']
+export type GameMode = 'Host' | 'No Host' | 'MC';
+
 
 export const GameContext = createContext<{
   currentSong: CurrentSong | null;
@@ -19,14 +21,28 @@ export const GameContext = createContext<{
   setPlayDuration: React.Dispatch<React.SetStateAction<number>>;
   gameMode: GameMode;
   setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
+  players: Map<string, number>
+  setPlayers: React.Dispatch<React.SetStateAction<Map<string, number>>>
+  addScore: (playerId: string, score?: number) => void;
+  resetScores: () => void;
+  resetGame: () => void
+  numOfAns: number;
+  setNumOfAns: React.Dispatch<React.SetStateAction<number>>;
 }>({
   currentSong: null,
   setCurrentSong: () => {},
   audioPlayerRef: React.createRef<AudioPlayer>(),
   playDuration: 0,
   setPlayDuration: () => {},
-  gameMode: 'host',
+  gameMode: 'Host',
   setGameMode: () => {},
+  players: new Map<string, number>(),
+  setPlayers: () => {},
+  addScore: () => {},
+  resetScores: () => {},
+  resetGame: () => {},
+  numOfAns: 4,
+  setNumOfAns: () => {}
 });
 
 type IPlaylistContext = ReturnType<typeof usePlaylistManager> | null;

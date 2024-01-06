@@ -2,6 +2,7 @@ import { Box, Flex, Image, Text } from '@mantine/core';
 import { Track } from '@spotify/web-api-ts-sdk';
 import { useContext } from 'react';
 import { GameContext } from '../context';
+import { displayArtist } from '../helper';
 
 type Props = {
   song: Track;
@@ -28,7 +29,7 @@ export default function Song(props: Props) {
           {props.song.name}
         </Text>
         <Text style={{ textAlign: 'left', fontWeight: isCurrentSong ? 'bold' : 'normal', color: isCurrentSong ? 'orange' : undefined }} size='md'>
-          {props.song.artists.map((item) => item.name).join(', ')}
+          {displayArtist(props.song.artists)}
         </Text>
       </Box>
       <Image

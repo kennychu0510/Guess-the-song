@@ -1,3 +1,7 @@
 .Page {
-  min-height: calc(100dvh - (150px + 20px));
+  min-height: calc(100dvh - (150px));
+}
+
+.Settings {
+  min-height: calc(100dvh - (150px));
 }
