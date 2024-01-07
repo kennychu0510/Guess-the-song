@@ -1,12 +1,14 @@
-import { Button, Stack, Title } from '@mantine/core';
+import { Button, Stack, Text, Title } from '@mantine/core';
 import { IconBrandSpotify } from '@tabler/icons-react';
 import './App.css';
 import GameLayout from './GameLayout';
+import classes from './Page.module.css';
+import InstallPWAButton from './components/InstallPWAButton';
+import { PlaylistContext } from './context';
+import usePlaylistManager from './hooks/usePlaylistManager';
 import useSpotifyManager from './hooks/useSpotifyManager';
 import Game from './pages/Game';
-import usePlaylistManager from './hooks/usePlaylistManager';
-import { PlaylistContext } from './context';
-import classes from './Page.module.css'
+
 
 function App() {
   const { getToken, sdk, logout } = useSpotifyManager();
@@ -24,9 +26,13 @@ function App() {
             <Game sdk={sdk} logout={logout} />
           ) : (
             <Stack justify='center' className={classes.Page}>
-              <Button size='md' onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
-                Connect Spotify
-              </Button>
+              <Stack mt={'auto'}>
+                <Button onClick={getToken} color='black' rightSection={<IconBrandSpotify color='#1DB954' />}>
+                  Login via Spotify
+                </Button>
+                <InstallPWAButton />
+              </Stack>
+              <Text mt={'auto'}>*Spotify API is used to power this game</Text>
             </Stack>
           )}
         </Stack>

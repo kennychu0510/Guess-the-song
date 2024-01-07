@@ -1,5 +1,5 @@
 import { Button, Flex, Modal, Stack, Text, TextInput, Title } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import React, { useRef } from 'react';
 
 export default function PlayerManagement({
@@ -34,26 +34,28 @@ export default function PlayerManagement({
       return newPlayers;
     });
   }
+
   return (
     <Modal.Root fullScreen opened={isOpened} onClose={onClose} centered>
       <Modal.Overlay />
       <Modal.Content>
-        <Modal.Header>
+        <Modal.Header maw={500} mx={'auto'}>
           <Modal.Title>
             <Title>Manage Players</Title>
           </Modal.Title>
           <Modal.CloseButton />
         </Modal.Header>
-        <Modal.Body>
-          <Stack mb={2}>
+        <Modal.Body maw={500} mx={'auto'}>
+          <Stack>
             <TextInput ref={playerInputRef} size='xl' placeholder='Name'></TextInput>
-            <Button onClick={addPlayer} size='md'>
+            <Button rightSection={<IconPlus />} onClick={addPlayer} size='md'>
               Add
             </Button>
-            {Array.from(players).map(([player]) => (
+            {Array.from(players).map(([player, score]) => (
               <Flex justify={'space-between'} align={'center'} key={player}>
                 <Flex style={{ flex: 1 }} mr={20} justify={'space-between'}>
                   <Text>{player}</Text>
+                  <Text>{score}</Text>
                 </Flex>
                 <Flex gap={10}>
                   <Button color={'red'} onClick={() => deletePlayer(player)}>

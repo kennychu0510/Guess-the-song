@@ -1,30 +1,19 @@
-# React + TypeScript + Vite
+# Guess the Song Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This a web app written in react for playing guess the song game. It uses Spotify API to retrieve playlists and song data. Users need to login via Spotify to use the app. Users may download the PWA to quickly access the app.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Play with a host
+2. No host mode (song name is hidden by default)
+3. Scoring system
+4. Customize song playing duration between 2 to 20 seconds
+5. Song plays at a random time each time
+6. Quickly add your Spotify personalized playlist or browse by featured playlist in various countries
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Tech Stack
+* React
+* Vite
+* Vite PWA
+* Mantine UI
+* Spotify API

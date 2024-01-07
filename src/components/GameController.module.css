@@ -6,3 +6,8 @@
     font-size: 24px;
   }
 }
+
+.SafeAreaBottom {
+  height: 20px;
+  width: '100vw';
+}

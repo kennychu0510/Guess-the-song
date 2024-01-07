@@ -1,10 +1,12 @@
-import { Box, Button, Flex, Modal, Slider, Stack, Text, Title } from '@mantine/core';
+import { Box, Button, Modal, SegmentedControl, Slider, Stack, Switch, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { BOTTOM_TAB_HEIGHT, PlayIntervalValues } from '../constants';
+import classes from '../Page.module.css';
+import { BOTTOM_TAB_HEIGHT, NumOfAnsMarks, PlayIntervalValues } from '../constants';
+import { GameMode, GameModes } from '../context';
 import useGameContext from '../hooks/useGameContext';
-import classes from '../Page.module.css'
+import InstallPWAButton from './InstallPWAButton';
 
 type Props = {
   logout: () => void;
@@ -14,7 +16,7 @@ type Props = {
 
 export default function Settings(props: Props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { playDuration, setPlayDuration, setCurrentSong, gameMode, setGameMode } = useGameContext();
+  const { playDuration, setPlayDuration, setCurrentSong, gameMode, setGameMode, modeConfig, setModeConfig } = useGameContext();
 
   const queryClient = useQueryClient();
 
@@ -40,6 +42,16 @@ export default function Settings(props: Props) {
     close();
   }
 
+  function onChangeGameMode(value: string) {
+    setGameMode(value as GameMode);
+  }
+
+  function onChangeNumOfAns(value: number) {
+    setModeConfig({ ...modeConfig, numOfAns: value });
+  }
+
+  console.log(modeConfig.showArtist)
+
   return (
     <>
       <Button style={{ width: '100%', marginTop: 'auto', marginBottom: BOTTOM_TAB_HEIGHT }} rightSection={<IconSettings />} onClick={open}>
@@ -48,14 +60,14 @@ export default function Settings(props: Props) {
       <Modal.Root fullScreen opened={opened} onClose={close} centered>
         <Modal.Overlay />
         <Modal.Content>
-          <Modal.Header>
+          <Modal.Header maw={500} mx={'auto'}>
             <Modal.Title>
               <Title>Settings</Title>
             </Modal.Title>
             <Modal.CloseButton />
           </Modal.Header>
-          <Modal.Body>
-            <Stack className={classes.Page}>
+          <Modal.Body maw={500} mx={'auto'}>
+            <Stack className={classes.Settings}>
               <Stack mb={20} style={{ flex: 1 }} gap={30}>
                 <Box>
                   <Text size='md' fw={'bold'} mb={10}>
@@ -67,15 +79,24 @@ export default function Settings(props: Props) {
                   <Text size='md' mb={10} fw={'bold'}>
                     Game mode
                   </Text>
-                  <Flex justify={'space-around'} gap={50}>
-                    <Button onClick={() => setGameMode('host')} variant={gameMode === 'host' ? 'filled' : 'outline'} w={'100%'}>
-                      With host
-                    </Button>
-                    <Button onClick={() => setGameMode('guess')} variant={gameMode === 'guess' ? 'filled' : 'outline'} w={'100%'}>
-                      Without host
-                    </Button>
-                  </Flex>
+                  <SegmentedControl fullWidth data={GameModes} value={gameMode} onChange={onChangeGameMode} />
                 </Box>
+                {gameMode === 'MC' && (
+                  <>
+                    <Box>
+                      <Text size='md' mb={10} fw={'bold'}>
+                        Number of Answers
+                      </Text>
+                      <Slider value={modeConfig.numOfAns} onChange={onChangeNumOfAns} min={4} max={10} marks={NumOfAnsMarks} />
+                    </Box>
+                    <Box>
+                      <Text size='md' mb={10} fw={'bold'}>
+                        Show Artist
+                      </Text>
+                      <Switch size="xl" onLabel='Yes' offLabel='No' checked={modeConfig.showArtist} onChange={(event) => setModeConfig({...modeConfig, showArtist: event.currentTarget.checked})} />
+                    </Box>
+                  </>
+                )}
               </Stack>
               <Button onClick={onResetScores} color='green'>
                 Reset Scores
@@ -83,6 +104,7 @@ export default function Settings(props: Props) {
               <Button onClick={onResetGame} color='red'>
                 Reset Game
               </Button>
+              <InstallPWAButton />
               <Button onClick={onLogout}>Logout</Button>
             </Stack>
           </Modal.Body>
