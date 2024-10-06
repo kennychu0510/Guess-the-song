@@ -1,9 +1,20 @@
-import { AuthorizationCodeWithPKCEStrategy, SpotifyApi } from '@spotify/web-api-ts-sdk';
+import { AuthorizationCodeWithPKCEStrategy, SpotifyApi,} from '@spotify/web-api-ts-sdk';
 import { useCallback, useEffect, useState } from 'react';
 
-const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const isDev = import.meta.env.VITE_ENV === 'development'
+
+const clientId = import.meta.env.VITE_REACT_APP_SPOTIFY_CLIENT_ID;
 
 const scope = ['playlist-read-private'];
+
+function getInternalSdk() {
+  const redirectUrl = window.location.origin + '/';
+  if (isDev) {
+    return SpotifyApi.withUserAuthorization(clientId, redirectUrl, scope);
+  }
+  const auth = new AuthorizationCodeWithPKCEStrategy(clientId, redirectUrl, scope);
+  return new SpotifyApi(auth);
+}
 
 export default function useSpotifyManager() {
   const [isActive, setIsActive] = useState(false);
@@ -13,8 +24,7 @@ export default function useSpotifyManager() {
   const code = new URLSearchParams(window.location.search).get('code');
 
   const spotifyAuthenticate = useCallback(async () => {
-    const auth = new AuthorizationCodeWithPKCEStrategy(clientId, redirectUrl, scope);
-    const internalSdk = new SpotifyApi(auth);
+    const internalSdk = getInternalSdk();
 
     try {
       const { authenticated } = await internalSdk.authenticate();
