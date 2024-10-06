@@ -32,7 +32,8 @@ function App() {
                 </Button>
                 <InstallPWAButton />
               </Stack>
-              <Text mt={'auto'}>*Spotify API is used to power this game</Text>
+              <Text mt={'auto'} >Spotify API is used to power this game</Text>
+              <Text>*Only whitelisted users can play the game</Text>
             </Stack>
           )}
         </Stack>
