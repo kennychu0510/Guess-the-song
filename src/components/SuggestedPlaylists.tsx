@@ -1,5 +1,5 @@
 import { Accordion, Select, Stack, Text, Title } from '@mantine/core';
-import { CountryCodeA2, Playlist, SpotifyApi } from '@spotify/web-api-ts-sdk';
+import { CountryCodeA2, Playlist, SimplifiedPlaylist, SpotifyApi } from '@spotify/web-api-ts-sdk';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SPOTIFY_COUNTRIES } from '../constants';
@@ -23,7 +23,7 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
 
   const playlist = featuredPlaylists.data?.playlists.items ?? [];
   
-  function isPlaylistValid(playlist: any) {
+  function isPlaylistValid(playlist: any): playlist is SimplifiedPlaylist[] {
     return playlist !== null && Array.isArray(playlist);
   }
 
