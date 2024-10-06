@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 const isDev = import.meta.env.VITE_ENV === 'development'
 
-const clientId = import.meta.env.VITE_REACT_APP_SPOTIFY_CLIENT_ID;
+const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 
 const scope = ['playlist-read-private'];
 
