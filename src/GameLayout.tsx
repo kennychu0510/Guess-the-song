@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import { GameContext, GameMode, ModeConfig } from './context';
 import { DEFAULT_PLAY_DURATION } from './constants';
-import { Analytics } from '@vercel/analytics/react';
 
 export default function GameLayout({ children }: { children: React.ReactNode }) {
   const [currentSong, setCurrentSong] = useState<{
@@ -64,7 +63,6 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
       }}
     >
       {children}
-      <Analytics />
     </GameContext.Provider>
   );
 }

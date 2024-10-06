@@ -36,7 +36,6 @@ export default function InstallPWAButton() {
   }, []);
 
   async function installPWA() {
-    console.log(installPrompt)
     if (!installPrompt) return;
     const result = await installPrompt.prompt();
     if (result.outcome === 'accepted') {

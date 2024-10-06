@@ -50,8 +50,6 @@ export default function Settings(props: Props) {
     setModeConfig({ ...modeConfig, numOfAns: value });
   }
 
-  console.log(modeConfig.showArtist)
-
   return (
     <>
       <Button style={{ width: '100%', marginTop: 'auto', marginBottom: BOTTOM_TAB_HEIGHT }} rightSection={<IconSettings />} onClick={open}>
