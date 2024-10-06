@@ -22,6 +22,10 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
   });
 
   const playlist = featuredPlaylists.data?.playlists.items ?? [];
+  
+  function isPlaylistValid(playlist: any) {
+    return playlist !== null && Array.isArray(playlist);
+  }
 
   return (
     <><Title size={'h2'}>Quick add</Title><Accordion>
@@ -31,7 +35,7 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
         </Accordion.Control>
         <Accordion.Panel>
           <Stack>
-            <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={personalPlaylist.data?.items ?? []} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
+            <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={isPlaylistValid(personalPlaylist.data?.items) ? personalPlaylist.data?.items : []} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>
@@ -42,7 +46,7 @@ export default function SuggestedPlaylists({ sdk, addPlaylist, currentPlaylist }
         <Accordion.Panel>
           <Stack>
             <Select size='md' value={country} onChange={setCountry} placeholder='Select a Country' searchable data={SPOTIFY_COUNTRIES} />
-            <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={playlist} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
+            <SuggestedPlaylist isLoading={featuredPlaylists.isLoading} items={isPlaylistValid(playlist) ? playlist : []} currentPlaylist={currentPlaylist} addPlaylist={addPlaylist} />
           </Stack>
         </Accordion.Panel>
       </Accordion.Item>
